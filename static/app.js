@@ -19,8 +19,8 @@ function getColor(data){
 }//end color function
 
 //Width and height of map
-var width = 300;
-var height = 300;
+var width = 2000;
+var height = 1000;
 
 // D3 Projection
 var projection = d3
@@ -38,14 +38,14 @@ var path = d3.geoPath().projection(projection)  // tell path generator to use pr
 //Create SVG element to append map to SVG
 //Create SVG element and append map to the SVG
 
-var map_svg = d3.select("div#container")
-  .append("svg")
-  .attr("preserveAspectRatio", "xMinYMin meet")
-  .attr("viewBox", "0 0 300 300")
-  .classed("svg-content", true);
+var map_svg = d3.select("#map-div")
+    .append("svg")
+    .attr("preserveAspectRatio", "xMinYMin meet")
+    .attr("viewBox", "0 0 2000 1000")
+    .classed("svg-content", true);
 
 
-var toop_div = d3.select("div#container")
+var toop_div = d3.select("#map-div")
     .append("div")
     .attr("class","tooltip")
     .style("opacity",0)
@@ -65,9 +65,17 @@ d3.json("static/Data/EnvCountry.json").then((json) => {
         .style("stroke-width", "1")
         .style("fill", function(d) { return getColor(d.properties.BioCap_RD)})
 
+
  
     d3.json("http://localhost:5000/api/v1.0/EnvData").then((data) => {
         console.log(`Data`, data)
+
+        MyPaths.on("click", function(d) {
+            // get value of selection
+            var valueCountry = d.properties.ADMIN
+            console.log(valueCountry)
+            return valueCountry
+        })//end mouseclick 
     
     })//Closes myData json
 

@@ -5,31 +5,19 @@
 }
 
 
-.main_background{
-    background-color: black;
+/* On mouse hover, lighten state color */
+path:hover {
+	fill-opacity: .7;
 }
 
-.main_background2{
-    background-color: rgb(165, 164, 164);
+path.feature {
+    stroke-width: 0.75px;
+    stroke: #fff;
+    fill: #a6bddb;
+    cursor: pointer;
 }
 
-.row_background{
-    background-color: teal;
-}
-
-.subtitle_color{
-    color:teal
-}
-
-.home_description_title {
-    color: gainsboro;
-}
-
-.home_description {
-    color: lightgray
-} 
-
-.svg-container {
+.map-div {
     display: inline-block;
     position: relative;
     width: 100%;
