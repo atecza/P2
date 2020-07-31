@@ -6,7 +6,7 @@ from sqlalchemy.orm import Session
 from sqlalchemy import create_engine, func
 import psycopg2
 
-from flask import Flask, jsonify
+from flask import Flask, jsonify, render_template, redirect
 import datetime as dt
 
 #make sure you have your own config on your computer in the SQL folder
@@ -46,13 +46,8 @@ app = Flask(__name__)
 #################################################
 
 @app.route("/")
-def welcome():
-    """List all available api routes."""
-    return (
-        f"Available Routes:<br/>"
-        f"/api/v1.0/EnvData<br/>"
-
-    )
+def Index():
+    return render_template("index.html")
 
 @app.route("/api/v1.0/EnvData")
 def EnvData():
@@ -70,6 +65,8 @@ def EnvData():
     FT = []
     LU = []
     ECO2 = []
+    BCap = []
+    BCapDR = []
     DQ = []
     SurArea = []
     Pop = []
@@ -97,6 +94,8 @@ def EnvData():
         FT.append(x.Footprint_Total)
         LU.append(x.Land_Urban)
         ECO2.append(x.Emissions_CO2)
+        BCap.append(x.Biocapacity_Total)
+        BCapDR.append(x.BioCap_RD)
         DQ.append(x.Data_Quality)
     
     CData = EData = session.query(CountryData).all()
@@ -125,6 +124,8 @@ def EnvData():
         "Footprint_Total":FT,
         "Land_Urban":LU,
         "Emissions_CO2":ECO2,
+        "BioCapTotal":BCap,
+        "BioCap_DR":BCapDR,
         "Data_Quality":DQ,
         "Area":SurArea,
         "Population":Pop,
