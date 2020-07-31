@@ -1,0 +1,89 @@
+@media (min-width: 576px){
+    .vis_box{
+        margin-bottom: 250px;
+    }
+}
+
+.vis_border {
+    border-width:3px !important;
+}
+
+
+.main_background{
+    background-color: black;
+}
+
+.main_background2{
+    background-color: rgb(165, 164, 164);
+}
+
+.row_background{
+    background-color: teal;
+}
+
+.subtitle_color{
+    color:teal
+}
+
+.home_description_title {
+    color: gainsboro;
+}
+
+.home_description {
+    color: lightgray
+} 
+
+.home_imagetag {
+    font-size: 5px;
+    color: gray;
+}
+
+.navbar-dark .navbar-brand {
+    color: yellowgreen;
+}
+
+.data_description_title {
+    color: black;
+}
+
+.table-condensed{
+    font-size: small ;
+}
+
+/* On mouse hover, lighten state color */
+path:hover {
+	fill-opacity: .7;
+}
+
+/* Style for Custom Tooltip */
+div.tooltip {   
+ 	position: absolute;           
+	text-align: center;           
+	width: 60px;                  
+	height: 28px;                 
+	padding: 2px;             
+	font: 12px sans-serif;        
+	background: white;   
+	border: 0px;      
+	border-radius: 8px;           
+	pointer-events: none;         
+}
+
+map_svg {
+    max-width: 960px;
+    max-height: 90vh;
+    stroke-linejoin: round;
+    stroke-linecap: round;
+}
+  
+rect.background {
+    fill: none;
+    pointer-events: all;
+}
+  
+path.feature {
+    stroke-width: 0.75px;
+    stroke: #fff;
+    fill: #a6bddb;
+    cursor: pointer;
+}
