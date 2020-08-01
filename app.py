@@ -54,95 +54,53 @@ def EnvData():
     # Create our session (link) from Python to the DB
     session = Session(engine)
     
-    #make all the empty lists
-    Countries = []
-    HDI = []
-    FC = []
-    FG = []
-    FF = []
-    FCar = []
-    FFish = []
-    FT = []
-    LU = []
-    ECO2 = []
-    BCap = []
-    BCapDR = []
-    DQ = []
-    SurArea = []
-    Pop = []
-    PopD = []
-    PopGr = []
-    PopUrb = []
-    GDP = []
-    GDPGrowth = []
-    EconAg = []
-    EconInd = []
-    EconServ = []
-    GovEd = []
-    WP = []
-    
     EData = session.query(EnvironmentData).all()
-    
-    for x in EData:
-        Countries.append(x.Country)
-        HDI.append(x.HDI)
-        FC.append(x.Footprint_Crop)
-        FG.append(x.Footprint_Graze)
-        FF.append(x.Footprint_Forest)
-        FCar.append(x.Footprint_Carbon)
-        FFish.append(x.Footprint_Fish)
-        FT.append(x.Footprint_Total)
-        LU.append(x.Land_Urban)
-        ECO2.append(x.Emissions_CO2)
-        BCap.append(x.Biocapacity_Total)
-        BCapDR.append(x.BioCap_RD)
-        DQ.append(x.Data_Quality)
-    
-    CData = EData = session.query(CountryData).all()
-    
-    for x in CData:
-        SurArea.append(x.Surface_Area)
-        Pop.append(x.Population)
-        PopD.append(x.PopDensity)
-        PopGr.append(x.PopGrowth)
-        PopUrb.append(x.PopUrban)
-        EconAg.append(x.EconAg)
-        EconInd.append(x.EconInd)
-        EconServ.append(x.EconService)
-        GovEd.append(x.Gov_Education)
-        WP.append(x.Women_Parliment)
-    
-    #put everything into a dictionary
-    full_data = {
-        "Country":Countries,
-        "HDI":HDI,
-        "Footprint_Crop":FC,
-        "Footprint_Graze":FG,
-        "Footprint_Forest":FF,
-        "Footprint_Carbon":FCar,
-        "Footprint_Fish":FF,
-        "Footprint_Total":FT,
-        "Land_Urban":LU,
-        "Emissions_CO2":ECO2,
-        "BioCapTotal":BCap,
-        "BioCap_DR":BCapDR,
-        "Data_Quality":DQ,
-        "Area":SurArea,
-        "Population":Pop,
-        "PopDensity":PopD,
-        "PopGrowth":PopGr,
-        "PopUrban":PopUrb,
-        "EconAg":EconAg,
-        "EconInd":EconInd,
-        "EconServ":EconServ,
-        "GovEducation":GovEd,
-        "Women_Parliment":WP
-    
-    }
+    myData = []
 
-    #Create my main dictionary
+    for x in EData:
     
-    myData = {"Data":full_data}
+        fullEdata = {}
+    
+        fullEdata = {
+            "Country": x.Country,
+            "HDI":x.HDI,
+            "Footprint_Crop":x.Footprint_Crop,
+            "Footprint_Graze":x.Footprint_Graze,
+            "Footprint_Forest":x.Footprint_Forest,
+            "Footprint_Carbon":x.Footprint_Carbon,
+            "Footprint_Fish":x.Footprint_Fish,
+            "Footprint_Total":x.Footprint_Total,
+            "Land_Urban":x.Land_Urban,
+            "Emission_CO2":x.Emissions_CO2,
+            "BioCap":x.Biocapacity_Total,
+            "BioCap_RD":x.BioCap_RD,
+            "Data_Quality":x.Data_Quality
+        }
+        
+        myData.append(fullEdata)
+    
+    CData = session.query(CountryData).all()
+
+    i = 0
+    for x in CData:   
+        
+        fullCData = {}
+    
+        fullCData = {
+            "Area": x.Surface_Area,
+            "Population":x.Population,
+            "PopDensity":x.PopDensity,
+            "PopGrowth":x.PopGrowth,
+            "PopUrban":x.PopUrban,
+            "EconAg":x.EconAg,
+            "EconInd":x.EconInd,
+            "EconServ":x.EconService,
+            "GovEducation":x.Gov_Education,
+            "Women_Parliment":x.Women_Parliment
+        }
+        
+        myData[i].update(fullCData)
+        i = i+1
     
     """Return the JSON representation of your dictionary"""
     return (jsonify(myData))
