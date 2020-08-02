@@ -9,9 +9,6 @@ path:hover {
 	fill-opacity: .7;
 }
 
-/* tooltip for map */
-
-
 
 .map-svg {
     display: block;
@@ -24,6 +21,16 @@ path:hover {
     background-color: azure;
 }
 
+
+.scatter-row{
+    background-color: grey;
+}
+
+#scatter-div{
+    background-color: whitesmoke;
+    width: 100%
+}
+
 .scatter-svg{
     display: block;
     position: relative;
@@ -33,13 +40,8 @@ path:hover {
     border-radius: 5px;
 }
 
-.scatter-row{
-    background-color: grey;
-}
 
-#scatter-div{
-    background-color: whitesmoke;
-}
+/*Style for the scatter chart */
 
 .aText {
     font-family: sans-serif;
@@ -66,3 +68,12 @@ path:hover {
     cursor: pointer;
 }
 
+/* stype toolTip for scatter */
+.toolTip {
+    background-color: gray;
+    border: solid;
+    border-width: 2px;
+    border-radius: 5px;
+    padding: 5px;
+
+}

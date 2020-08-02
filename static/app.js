@@ -4,11 +4,12 @@ var svgHeight = 700;
 
 var margin = {
   top: 40,
-  right: 40,
+  right: 20,
   bottom: 100,
   left: 100
 };
 
+//create width and height for axis that will allow space from sides of svg
 var width = svgWidth - margin.left - margin.right;
 var height = svgHeight - margin.top - margin.bottom;
 
@@ -18,8 +19,8 @@ var height = svgHeight - margin.top - margin.bottom;
 var scatter_svg = d3
     .select("#scatter-div")
     .append("svg")
-    .attr("width", svgWidth)
-    .attr("height", svgHeight);
+    .attr("viewBox", "0 0 900 700")//set the viewbox to svg original height and width
+    .classed("svg-content-responsive", true)
 
 // Append an SVG group
 var chartGroup = scatter_svg.append("g")
@@ -97,8 +98,7 @@ function renderCircleLabels(circlesLable, xLinearScale, yLinearScale, chosenXAxi
 function updateToolTip(chosenXAxis, chosenYAxis, circlesGroup) {
       
     var toolTip = d3.tip()
-        .attr("class", "tooltip")
-        .offset([80, -60])
+        .attr("class", "toolTip") //made capital T to distinguish from map tooltip
         .html(function(d) {
             return (`Country: ${d['Country']}<br>${chosenXAxis}: ${d[chosenXAxis]}<br> ${chosenYAxis}: ${d[chosenYAxis]}`);
         });
@@ -119,7 +119,7 @@ function updateToolTip(chosenXAxis, chosenYAxis, circlesGroup) {
   
 // Initial Param
   
-var chosenYAxis = "BioCap_RD";
+var chosenYAxis = "Footprint_Total";
 var chosenXAxis = "HDI";
 
 
@@ -168,15 +168,15 @@ function getData() {
             .attr("opacity", ".5")
 
     
-        //create labels
-        var circlesLable = chartGroup.selectAll("text").exit()
-            .data(EnvData)  
-            .enter()
-            .append("text")
-            .attr("x", d => xLinearScale(d[chosenXAxis])-10)
-            .attr("y", d => yLinearScale(d[chosenYAxis])+5)
-            .text(d => d.Data_Quality)
-            .attr("class","stateAbbr");
+        //create labels (I decided labels made it too busy)
+        // var circlesLable = chartGroup.selectAll("text").exit()
+        //     .data(EnvData)  
+        //     .enter()
+        //     .append("text")
+        //     .attr("x", d => xLinearScale(d[chosenXAxis])-10)
+        //     .attr("y", d => yLinearScale(d[chosenYAxis])+5)
+        //     .text(d => d.Data_Quality)
+        //     .attr("class","Data_Quality");
     
         // Create group for three x-axis labels
         var xlabelsGroup = chartGroup.append("g")
@@ -210,32 +210,15 @@ function getData() {
         var ylabelsGroup = chartGroup.append("g")
             .attr("transform", `translate(-80,${height/2})`);
     
-        var BioCapLabel = ylabelsGroup.append("text")
-            .attr("transform", "rotate(-90)")
-            .attr("y", 0)
-            .attr("x", 0) //this should be the outer most lable
-            .attr("value", "BioCap") // value to grab for event listener
-            .classed("active", true)
-            .classed("inactive", false)
-        .   text("Biologic Capacity");
     
         var FTotalLabel = ylabelsGroup.append("text")
             .attr("transform", "rotate(-90)")
             .attr("y", 20)
             .attr("x", 0)
             .attr("value", "Footprint_Total") // value to grab for event listener
-            .classed("active", false)
-            .classed("inactive", true)
+            .classed("active", true)
+            .classed("inactive", false)
             .text("Total Ecological Footprint");
-    
-        var EmissionLabel = ylabelsGroup.append("text")
-            .attr("transform", "rotate(-90)")
-            .attr("y", 40)
-            .attr("x", 0)
-            .attr("value", "Emission_CO2") // value to grab for event listener
-            .classed("active", false)
-            .classed("inactive", true)
-            .text("Emissions CO2");
     
     
         // updateToolTip 
@@ -264,7 +247,7 @@ function getData() {
                 // updates circles with new x values
                 circlesGroup = renderCircles(circlesGroup, xLinearScale, yLinearScale, chosenXAxis, chosenYAxis);
 
-                circlesLable = renderCircleLabels(circlesLable, xLinearScale, yLinearScale, chosenXAxis, chosenYAxis);
+                //circlesLable = renderCircleLabels(circlesLable, xLinearScale, yLinearScale, chosenXAxis, chosenYAxis);
 
                 // updates tooltips with new info
                 circlesGroup = updateToolTip(chosenXAxis, chosenYAxis, circlesGroup);
@@ -308,70 +291,6 @@ function getData() {
 
         });// end xlabelsGroup select on click function
 
-        ylabelsGroup.selectAll("text").on('click', function(){
-
-            // get value of selection
-            var valueY = d3.select(this).attr("value");
-
-            if (valueY !== chosenYAxis){
-        
-                // replaces chosenXAxis with value
-                chosenYAxis = valueY;
-
-                console.log(`chosenY: ${chosenYAxis}`)
-                console.log(`chosenX: ${chosenXAxis}`)
-
-                // updates x scale for new data
-                yLinearScale = yScale(EnvData, chosenYAxis);
-
-                // updates x axis with transition
-                yAxis = renderYAxes(yLinearScale, yAxis);
-
-                // updates circles with new x values
-                circlesGroup = renderCircles(circlesGroup, xLinearScale, yLinearScale, chosenXAxis, chosenYAxis);
-
-                circlesLable = renderCircleLabels(circlesLable, xLinearScale, yLinearScale, chosenXAxis, chosenYAxis);
-
-                // updates tooltips with new info
-                circlesGroup = updateToolTip(chosenXAxis, chosenYAxis, circlesGroup);
-
-                // changes classes to change bold text
-                if (chosenYAxis === "BioCap") {
-                    BioCapLabel
-                        .classed("active", true)
-                        .classed("inactive", false);
-                    FTotalLabel
-                        .classed("active", false)
-                        .classed("inactive", true);
-                    EmissionLabel
-                        .classed("active", false)
-                        .classed("inactive", true);
-                }
-                if (chosenYAxis === "Footprint_Total"){
-                    BioCapLabel
-                        .classed("active", false)
-                        .classed("inactive", true);
-                    FTotalLabel
-                        .classed("active", true)
-                        .classed("inactive", false);
-                    EmissionLabel
-                        .classed("active", false)
-                        .classed("inactive", true);
-                }
-                if (chosenYAxis === "Emissions_CO2"){
-                    BioCapLabel
-                        .classed("active", false)
-                        .classed("inactive", true);
-                    FTotalLabel
-                        .classed("active", false)
-                        .classed("inactive", true);
-                    EmissionLabel
-                        .classed("active", true)
-                        .classed("inactive", false);
-                }
-            } //end if statement for novel selection
-        });// end ylabelGroup select-on-click function
-
     });//end of d3.json for main data
 }// end of getData function
 
@@ -395,6 +314,8 @@ function getColor(data){
 
     return result
 }//end color function
+
+
 
 //Width and height of map
 var w = 100;
@@ -436,8 +357,8 @@ var Tooltip = d3.select("#map-div")
             .html(d.properties.ADMIN + "<br>" + "BioCap: " + d.properties.BioCap_RD)
             .style("left", d3.event.pageX + "px")
             .style("top", d3.event.pageY + "px")
-            console.log(d3.mouse(this)[0])
     }
+
     var mouseleave = function(d) {
         Tooltip.style("opacity", 0)
     }
