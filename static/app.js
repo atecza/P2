@@ -1,5 +1,5 @@
 //set initial parameters
-var svgWidth = 1000;
+var svgWidth = 800;
 var svgHeight = 700;
 
 var margin = {
@@ -12,6 +12,7 @@ var margin = {
 var width = svgWidth - margin.left - margin.right;
 var height = svgHeight - margin.top - margin.bottom;
 
+
 // Create an SVG wrapper, append an SVG group that will hold our chart,
 // and shift the latter by left and top margins.
 var scatter_svg = d3
@@ -23,6 +24,7 @@ var scatter_svg = d3
 // Append an SVG group
 var chartGroup = scatter_svg.append("g")
     .attr("transform", `translate(${margin.left}, ${margin.top})`);
+    
 
 //Build main functions
 // function used for updating x-scale var upon click on axis label
@@ -125,9 +127,10 @@ var chosenXAxis = "HDI";
 
 function getData() {
     //wait for the promise 
-    d3.json("http://localhost:5000/api/v1.0/EnvData").then((EnvData) => {
+    d3.json("http://localhost:5000/api/v1.0/EnvData").then((data) => {
         console.log(`x & y: ${chosenXAxis},${chosenYAxis}`)
         
+        var EnvData = data.filter(d => d.BioCap_RD !== 0)
         console.log(EnvData)
 
         // xLinearScale function above csv import
@@ -159,7 +162,7 @@ function getData() {
             .append("circle")
             .attr("cx", d => xLinearScale(d[chosenXAxis]))
             .attr("cy", d => yLinearScale(d[chosenYAxis]))
-            .attr("r", 20)
+            .attr("r", 15)
             .attr("fill", function(d) { return getColor(d.BioCap_RD)})
             .attr("stroke", "steelblue")
             .attr("opacity", ".5")
@@ -394,14 +397,14 @@ function getColor(data){
 }//end color function
 
 //Width and height of map
-var w = 600;
-var h = 300;
+var w = 100;
+var h = 50;
 
 // D3 Projection
 var projection = d3
    .geoEquirectangular()
    .center([0, 15]) // set centre to further North
-   .scale(100) // scale to fit group width
+   .scale(16) // scale to fit group width
    .translate([w/2,h/2]) // ensure centred in group
 ;
 
@@ -411,11 +414,11 @@ var path = d3.geoPath().projection(projection)  // tell path generator to use pr
 
 var map_svg = d3.select("#map-div")
     .append("svg")
-    .attr("preserveAspectRatio", "xMinYMin meet")
-    .attr("viewBox", "0 0 600 300")
-    .classed("svg-content", true);
+    .attr("preserveAspectRatio", "none")
+    .attr("viewBox", "0 0 100 50")
+    .classed("map-svg", true);
 
-
+//make the tooltip for the map
 var Tooltip = d3.select("#map-div")
     .append("div")
     .attr("class", "tooltip")
@@ -425,19 +428,20 @@ var Tooltip = d3.select("#map-div")
     .style("border-width", "2px")
     .style("border-radius", "5px")
     .style("padding", "5px")
-    // Three function that change the tooltip when user hover / move / leave a cell
+    // Two function that change the tooltip when user hover / move / leave a cell
+    
     var mouseover = function(d) {
-        Tooltip.style("opacity", 1)
-    }
-    var mousemove = function(d) {
         Tooltip
+            .style("opacity", 1)
             .html(d.properties.ADMIN + "<br>" + "BioCap: " + d.properties.BioCap_RD)
-            .style("left", (d3.mouse(this)[0]+100) + "px")
-            .style("top", (d3.mouse(this)[1]) + "px")
+            .style("left", d3.event.pageX + "px")
+            .style("top", d3.event.pageY + "px")
+            console.log(d3.mouse(this)[0])
     }
     var mouseleave = function(d) {
         Tooltip.style("opacity", 0)
     }
+
 
 //Load Map Data
 d3.json("static/Data/EnvCountry.json").then((json) => {
@@ -451,19 +455,18 @@ d3.json("static/Data/EnvCountry.json").then((json) => {
         .attr("d", path)
         .attr("id", function(d) { return d.properties.ADMIN; }) //assign a value to each path
         .style("stroke", "#fff")
-        .style("stroke-width", "1")
+        .style("stroke-width", ".05")
         .style("fill", function(d) { return getColor(d.properties.BioCap_RD)})
         .on("mouseover", mouseover)
-        .on("mousemove", mousemove)
         .on("mouseleave", mouseleave)
-
-    
+        
 
     MyPaths.on("click", function(d) {
         x = d.properties.ADMIN
         console.log(x)
     })//end mouseclick 
 
+    //run the functions for the plots
     getData()
 
 
