@@ -56,33 +56,82 @@ d3.select("div#chartId") //#chartid
 <div id="chartId"></div>
 
 
-//playing with barchart
-barGroup.selectAll(".bar")
+
+
+// bargraph works
+var xBandScale = d3.scaleBand()
+            .domain(selectedData.map(d => d.group))
+            .range([0, width])
+            .padding(0.1);
+        
+        var yLinearScale = d3.scaleLinear()
+            .domain([0, d3.max(selectedData, d => d.value)])
+            .range([height, 0]);
+        
+        var bottomAxis = d3.axisBottom(xBandScale);
+        var leftAxis = d3.axisLeft(yLinearScale).ticks(10);
+
+        barGroup.append("g")
+            .call(leftAxis);
+        
+        barGroup.append("g")
+            .attr("transform", `translate(0, ${height})`)
+            .call(bottomAxis);
+        
+        barGroup.selectAll(".bar")
             .data(selectedData)
             .enter()
             .append("rect")
             .attr("class", "bar")
-            .attr("x", function(d) { return x(d.group); })
-            .attr("width", 10)
-            .attr("y", function(d) { return y(d.value); })
-            .attr("height", function(d) { return height - y(d.value); });
-  
+            .attr("x", d => xBandScale(d.group))
+            .attr("y", d => yLinearScale(d.value))
+            .attr("width", xBandScale.bandwidth())
+            .attr("height", d => height - yLinearScale(d.value));
+
+
+//bargraph update
+        // Initialize the X axis
         var x = d3.scaleBand()
             .range([ 0, width ])
-            .domain(selectedData.map(function(d) { return d.group; }))
             .padding(0.2);
-
-            console.log('X', x)
-
-        barGroup.append("g")
-            .attr("transform", "translate(0," + height + ")")
-            .call(d3.axisBottom(x))
-
-
-        var y = d3.scaleLinear()
-            .domain([0, d3.max(selectedData, function(d) { return d.value;})])
-            .range([ height, 0]);
         
-        barGroup.append("g")
+        var xAxis = bar_svg.append("g")
+            .attr("transform", "translate(0," + height + ")")
+        
+        // Initialize the Y axis
+        var y = d3.scaleLinear()
+            .range([ height, 0]);
+
+        var yAxis = bar_svg.append("g")
             .attr("class", "myYaxis")
-            .call(d3.axisLeft(y));
+        
+        // A function that create / update the plot for a given variable:
+
+function updateBar(data) {
+
+    //Update the X axis
+    x.domain(data.map(function(d){return d.group}))
+    xAxis.call(d3.axisBottom(x))
+
+    //Update the Y axis
+    y.domain([0, d3.max(data, function(d){return d.value})]);
+    yAxis.transition().duration(1000).call(d3.axisLeft(y));
+
+    //create the updated bar
+    var upbar = bar_svg.selectAll("rect")
+        .data(data)
+    
+    upbar.enter()
+        .append("rect")//add a new rect for each new element
+        .merge(upbar)//get existing elements
+        .transition()//apply changes to all
+        .duration(1000)
+            .attr("x", function(d){return x(d.group);})
+            .attr("y", function(d){return y(d.value);})
+            .attr("width", x.bandwidth())
+            .attr("height", function(d) { return height - y(d.value); })
+            .attr("fill", "#69b3a2")
+    
+    upbar.exit().remove() //cleanup
+
+}//end updateBar function

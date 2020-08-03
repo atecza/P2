@@ -3,17 +3,17 @@
 function barColor(group) {
     switch (group) {
     case "Footprint_Carbon":
-      return "#24248f";
+      return "#b38f00";
     case "Footprint_Crop":
-      return "#ffcc00";
+      return "#806600";
     case "Footprint_Fish":
-      return "#008080";
+      return "#608000";
     case "Footprint_Forest":
-      return "##394d00";
+      return "#394d00";
     case "Footprint_Graze":
-      return "#86b300";
+      return "#662200";
     case "Footprint_Total":
-        return "#660000";
+        return "#800000";
     default:
       return "black";
     }
@@ -50,6 +50,7 @@ var scatter_svg = d3
     .attr("viewBox", "0 0 900 700")//set the viewbox to svg original height and width
     .classed("svg-content-responsive", true)
     .attr("id","scatter-svg")
+    .style("font", "20px times")
     
 
 // Append an SVG group
@@ -100,11 +101,20 @@ function createBar(x){
             var leftAxis = d3.axisLeft(yLinearScale).ticks(10);
 
             barGroup.append("g")
+                .style("font", "14px times")
                 .call(leftAxis);
         
             barGroup.append("g")
+                .style("font", "15px times")
+                .style("font-weight","bold")
                 .attr("transform", `translate(0, ${height})`)
-                .call(bottomAxis);
+                .call(bottomAxis)
+                .selectAll("text")
+                    .attr("y", 0)
+                    .attr("x", 10)
+                    .attr("dy", ".35em")
+                    .attr("transform", "rotate(45)")
+                    .style("text-anchor", "start");
         
             barGroup.selectAll(".bar")
                 .data(selectedData)
@@ -246,12 +256,14 @@ function getData() {
         // append x axis
         var xAxis = chartGroup.append("g")
             .classed("x-axis", true)
+            .style("font", "14px times")
             .attr("transform", `translate(0, ${height})`)
             .call(bottomAxis);
   
         // append y axis
         var yAxis = chartGroup.append("g")
             .classed("y-axis",true)
+            .style("font", "14px times")
             .call(leftAxis);
     
         // append initial circles
@@ -262,7 +274,10 @@ function getData() {
             .attr("cx", d => xLinearScale(d[chosenXAxis]))
             .attr("cy", d => yLinearScale(d[chosenYAxis]))
             .attr("r", 15)
-            .attr("fill", function(d) { return getColor(d.BioCap_RD)})
+            .attr("fill", function(d) { 
+                if(d.BioCap_RD > 0){return ResColor(d.BioCap_RD)}
+                else {return DefColor(d.BioCap_RD)}
+            })
             .attr("stroke", "steelblue")
             .attr("opacity", ".5")
 
@@ -395,7 +410,7 @@ function getData() {
 
 //////////// MAKE MAP //////////////
 
-//define th color for map
+//old color function (didn't use)
 function getColor(data){
     if (data === 0){result = "grey"} 
     else if (data <= -10){result = "#800000"}
@@ -413,7 +428,23 @@ function getColor(data){
     else {result == "black"}
 
     return result
-}//end color function
+}//end old color function
+
+//color for divergent color scale
+var DefColorMin = "#ffcc00",
+    DefColorMax = "#330000",
+    ResColorMin = "#00cc00",
+    EqualColor = "grey",
+    ResColorMax = "#001a00";
+
+var DefColor = d3.scaleLinear()
+    .range([DefColorMin, DefColorMax])
+    .domain([-0.001,-7])
+    .interpolate(d3.interpolateLab);
+var ResColor = d3.scaleLinear()
+    .range([ResColorMin, ResColorMax])
+    .domain([0.001,15])
+    .interpolate(d3.interpolateLab);
 
 
 //Width and height of map
@@ -479,9 +510,18 @@ d3.json("static/Data/EnvCountry.json").then((json) => {
         .append("path")
         .attr("d", path)
         .attr("id", function(d) { return d.properties.ADMIN; }) //assign a value to each path
-        .style("stroke", "#fff")
+        .style("stroke", "black")
         .style("stroke-width", ".05")
-        .style("fill", function(d) { return getColor(d.properties.BioCap_RD)})
+        .style("fill", function(d) {
+            if (d.properties.BioCap_RD === 0){
+                return EqualColor
+            } else if (d.properties.BioCap_RD > 0){
+                return ResColor(d.properties.BioCap_RD)
+            } else {
+                return DefColor(d.properties.BioCap_RD)
+            }
+
+        })
         .on("mouseover", mouseover)
         .on("mouseleave", mouseleave)
         
@@ -489,9 +529,63 @@ d3.json("static/Data/EnvCountry.json").then((json) => {
     MyPaths.on("click", function(d) {
         ChosenCountry  = d.properties.ADMIN
         console.log(`ChosenCountry: ${ChosenCountry}`)
-        return createBar(ChosenCountry)
+        return createBar(ChosenCountry)//this function makes bar graph
 
     })//end mouseclick 
+
+    /// MAKE LEGEND for MAP///
+
+    legend = map_svg.append("g")
+        .attr("class", "legend")
+        .style("font", "2px times")
+        .attr("transform", "translate(5,-10)")
+
+    var legend_width = 12
+    var divisions = 12
+    var fakeData = [];
+    var rectWidth = Math.floor(legend_width / divisions);
+
+    for (var i=0; i < legend_width/2; i+= rectWidth ) {
+        fakeData.push(i);
+    }
+
+    var ResColorScaleLegend = d3.scaleLinear()
+          .domain([0, fakeData.length-1])
+          .interpolate(d3.interpolateLab)
+          .range([ResColorMin, ResColorMax]);
+    var DefColorScaleLegend = d3.scaleLinear()
+          .domain([fakeData.length-1,0])
+          .interpolate(d3.interpolateLab)
+          .range([DefColorMin, DefColorMax]);
+
+    var ResLegend = legend.append("g").attr("class", "ResLegend").attr("transform", "translate("+(legend_width/2)+",0)"),
+        DefLegend = legend.append("g").attr("class", "DefLegend");
+
+    ResLegend.selectAll("rect")
+        .data(fakeData)
+        .enter()
+        .append("rect")
+            .attr("x", function(d) { return d; })
+            .attr("y", 12)
+            .attr("height", 1)
+            .attr("width", rectWidth)
+            .attr("fill", function(d, i) { return ResColorScaleLegend(i)});
+    
+    DefLegend.selectAll("rect")
+        .data(fakeData)
+        .enter()
+        .append("rect")
+            .attr("x", function(d) { return d; })
+            .attr("y", 12)
+            .attr("height", 1)
+            .attr("width", rectWidth)
+            .attr("fill", function(d, i) { return DefColorScaleLegend(i)});
+    
+    legend.append("text").text("0").attr("transform","translate("+((legend_width/2)-.5)+",15)");
+    legend.append("text").text("-10").attr("transform","translate(-2,15)");
+    legend.append("text").text("10").attr("transform","translate("+(legend_width)+",15)");
+
+
 
     //run the functions for the plots
     getData()
