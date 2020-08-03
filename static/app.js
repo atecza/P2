@@ -1,4 +1,24 @@
 
+//make color for bar chart
+function barColor(group) {
+    switch (group) {
+    case "Footprint_Carbon":
+      return "#24248f";
+    case "Footprint_Crop":
+      return "#ffcc00";
+    case "Footprint_Fish":
+      return "#008080";
+    case "Footprint_Forest":
+      return "##394d00";
+    case "Footprint_Graze":
+      return "#86b300";
+    case "Footprint_Total":
+        return "#660000";
+    default:
+      return "black";
+    }
+}
+
 
 //set initial parameters (This will be size of entire svg)
 var svgWidth = 800;
@@ -22,7 +42,6 @@ var bar_svg = d3.select("#bar-div")
     .attr("id","update-svg")
 
 
-
 // Create an SVG wrapper, append an SVG group that will hold our chart,
 // and shift the latter by left and top margins.
 var scatter_svg = d3
@@ -30,6 +49,8 @@ var scatter_svg = d3
     .append("svg")
     .attr("viewBox", "0 0 900 700")//set the viewbox to svg original height and width
     .classed("svg-content-responsive", true)
+    .attr("id","scatter-svg")
+    
 
 // Append an SVG group
 var chartGroup = scatter_svg.append("g")
@@ -93,7 +114,8 @@ function createBar(x){
                 .attr("x", d => xBandScale(d.group))
                 .attr("y", d => yLinearScale(d.value))
                 .attr("width", xBandScale.bandwidth())
-                .attr("height", d => height - yLinearScale(d.value));
+                .attr("height", d => height - yLinearScale(d.value))
+                .attr("fill", function(d) { return barColor(d.group) })
 
         }//end updateBar function
 

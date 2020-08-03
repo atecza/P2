@@ -1,4 +1,4 @@
-//set initial parameters
+//set initial parameters (This will be size of entire svg)
 var svgWidth = 800;
 var svgHeight = 700;
 
@@ -25,7 +25,6 @@ var scatter_svg = d3
 // Append an SVG group
 var chartGroup = scatter_svg.append("g")
     .attr("transform", `translate(${margin.left}, ${margin.top})`);
-    
 
 //Build main functions
 // function used for updating x-scale var upon click on axis label

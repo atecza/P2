@@ -15,44 +15,57 @@ path:hover {
     position: relative;
     right: 5;
     border:solid;
-    border-color: #231b8f;
+    border-color: darkslategray;
     border-width: 5px;
     border-radius: 5px;
-    background-color: azure;
+    background-color: whitesmoke;
 }
 
+#update-svg {
+    display: block;
+    position: relative;
+    right: 5;
+    border:solid;
+    border-color: black;
+    border-width: 5px;
+    border-radius: 5px;
+    background-color:whitesmoke;
+}
+
+#scatter-svg {
+    display: block;
+    position: relative;
+    right: 5;
+    border:solid;
+    border-color: black;
+    border-width: 5px;
+    border-radius: 5px;
+    background-color:whitesmoke;
+}
+
+.bar-container{
+    display:inline-block;
+}
+
+.scatter-container{
+    display:inline-block;
+}
+
+
+#scatter-container{
+    text-align: center;
+    width: 100%;
+    background-image: url("https://images.unsplash.com/photo-1556477456-57ea33f6f566?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=700&q=60");
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+}
 
 .scatter-row{
-    background-color: grey;
+    width: 100%;
+    text-align: center;
 }
 
-#scatter-div{
-    background-color: whitesmoke;
-    width: 100%
-}
-
-.scatter-svg{
-    display: block;
-    position: relative;
-    border:solid;
-    border-color: black;
-    border-width: 5px;
-    border-radius: 5px;
-}
-
-#bar-div{
-    background-color: whitesmoke;
-    width: 100%
-}
-
-.bar-svg{
-    display: block;
-    position: relative;
-    border:solid;
-    border-color: black;
-    border-width: 5px;
-    border-radius: 5px;
-}
 
 
 /*Style for the scatter chart */
