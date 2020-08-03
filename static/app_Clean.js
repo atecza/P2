@@ -1,6 +1,4 @@
-
-
-//set initial parameters (This will be size of entire svg)
+//set initial parameters
 var svgWidth = 800;
 var svgHeight = 700;
 
@@ -15,13 +13,6 @@ var margin = {
 var width = svgWidth - margin.left - margin.right;
 var height = svgHeight - margin.top - margin.bottom;
 
-var bar_svg = d3.select("#bar-div")
-    .append("svg")
-    .attr("viewBox", "0 0 900 700")
-    .classed("svg-content-responsive", true)
-    .attr("id","update-svg")
-
-
 
 // Create an SVG wrapper, append an SVG group that will hold our chart,
 // and shift the latter by left and top margins.
@@ -34,75 +25,7 @@ var scatter_svg = d3
 // Append an SVG group
 var chartGroup = scatter_svg.append("g")
     .attr("transform", `translate(${margin.left}, ${margin.top})`);
-
-
-function createBar(x){
-
-    d3.json("http://localhost:5000/api/v1.0/EnvData").then((data) => {
-
-        //filter data for bar graph by selected country
-        CD = data.filter(f => f.Country === x)
-        console.log(`Test data`, CD)
-
-        //get the data into appropriate format for bar graph
-        selectedData = []
-
-        Object.entries(CD[0]).forEach(([key, value]) => {
-            if (key.includes("Footprint")){
-                console.log(key)
-                console.log(value)
-                Dic = {"group":key, "value":value}
-                selectedData.push(Dic)
-            }
-        });
-
-        console.log("myList", selectedData)
-
-        
-        function updateBar(selectedData) {
-
-            bar_svg.selectAll("*").remove();
-
-            var barGroup = bar_svg.append("g")
-                .attr("transform", `translate(${margin.left}, ${margin.top})`);
-
-            var xBandScale = d3.scaleBand()
-                .domain(selectedData.map(d => d.group))
-                .range([0, width])
-                .padding(0.1);
-        
-            var yLinearScale = d3.scaleLinear()
-                .domain([0, d3.max(selectedData, d => d.value)])
-                .range([height, 0]);
-        
-            var bottomAxis = d3.axisBottom(xBandScale);
-            var leftAxis = d3.axisLeft(yLinearScale).ticks(10);
-
-            barGroup.append("g")
-                .call(leftAxis);
-        
-            barGroup.append("g")
-                .attr("transform", `translate(0, ${height})`)
-                .call(bottomAxis);
-        
-            barGroup.selectAll(".bar")
-                .data(selectedData)
-                .enter()
-                .append("rect")
-                .attr("class", "bar")
-                .attr("x", d => xBandScale(d.group))
-                .attr("y", d => yLinearScale(d.value))
-                .attr("width", xBandScale.bandwidth())
-                .attr("height", d => height - yLinearScale(d.value));
-
-        }//end updateBar function
-
-        updateBar(selectedData)
-        
-    })//end d3 call
     
-}//end function createBar
-
 
 //Build main functions
 // function used for updating x-scale var upon click on axis label
@@ -384,9 +307,8 @@ function getColor(data){
     else if (data >= -2 && data < 0){result = "#ff751a"}
     else if (data > 0 && data < 2){result = "#e6b800"} 
     else if (data >= 2 && data < 4){result = "#b3b300"}
-    else if (data >= 4 && data < 6){result = "#669900"}
-    else if (data >= 6 && data < 8){result = "#446600"}
-    else if (data >= 8 && data < 10){result = "#00802b"}
+    else if (data >= 6 && data < 8){result = "#669900"}
+    else if (data >= 8 && data < 10){result = "#446600"}
     else if (data >= 10){result = "#334d00"}
     else {result == "black"}
 
@@ -431,11 +353,7 @@ var Tooltip = d3.select("#map-div")
     var mouseover = function(d) {
         Tooltip
             .style("opacity", 1)
-            .html(function(){
-                console.log(d)
-                if (d.properties.BioCap_RD !== 0){return d.properties.ADMIN + "<br>" + "BioCap: " + d.properties.BioCap_RD}
-                else {return d.properties.ADMIN + ": No Data"}
-            })
+            .html(d.properties.ADMIN + "<br>" + "BioCap: " + d.properties.BioCap_RD)
             .style("left", d3.event.pageX + "px")
             .style("top", d3.event.pageY + "px")
     }
@@ -444,10 +362,8 @@ var Tooltip = d3.select("#map-div")
         Tooltip.style("opacity", 0)
     }
 
-
 //Load Map Data
 d3.json("static/Data/EnvCountry.json").then((json) => {
-
 
     console.log(json)
     // Bind the data to the SVG and create one path per GeoJSON feature
@@ -465,10 +381,8 @@ d3.json("static/Data/EnvCountry.json").then((json) => {
         
 
     MyPaths.on("click", function(d) {
-        ChosenCountry  = d.properties.ADMIN
-        console.log(`ChosenCountry: ${ChosenCountry}`)
-        return createBar(ChosenCountry)
-
+        x = d.properties.ADMIN
+        console.log(x)
     })//end mouseclick 
 
     //run the functions for the plots

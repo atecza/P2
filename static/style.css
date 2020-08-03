@@ -40,6 +40,20 @@ path:hover {
     border-radius: 5px;
 }
 
+#bar-div{
+    background-color: whitesmoke;
+    width: 100%
+}
+
+.bar-svg{
+    display: block;
+    position: relative;
+    border:solid;
+    border-color: black;
+    border-width: 5px;
+    border-radius: 5px;
+}
+
 
 /*Style for the scatter chart */
 

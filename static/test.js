@@ -11,29 +11,78 @@ function addCountry(myData){
 }
 
 
-d3.json("http://localhost:5000/api/v1.0/EnvData").then((data) => {
-        console.log(`Data`, data.Data)
+// Notes on making svg responsive to div container resizing
+d3.select("div#chartId") //#chartid
+   .append("div")
+   // Container class to make it responsive.
+   .classed("svg-container", true) 
+   .append("svg")
+   // Responsive SVG needs these 2 attributes and no width and height attr.
+   .attr("preserveAspectRatio", "xMinYMin meet")
+   .attr("viewBox", "0 0 600 400")
+   // Class to make it responsive.
+   .classed("svg-content-responsive", true)
 
-        EnvData = data.Data
-        addCountry(EnvData.Country)
 
-        //get the selected value
-        var myCountry = d3.select("#selDataset").property("value")
-        console.log(`selected: ${myCountry}`)
+//The CSS:
+
+// .svg-container {
+//   display: inline-block;
+//   position: relative;
+//   width: 100%;
+//   padding-bottom: 100%; /* aspect ratio */
+//   vertical-align: top;
+//   overflow: hidden;
+// }
+
+// .svg-content-responsive {
+//   display: inline-block;
+//   position: absolute;
+//   top: 10px;
+//   left: 0;
+// }
+
+// svg .rect {
+//   fill: gold;
+//   stroke: steelblue;
+//   stroke-width: 5px;
+// }
+
+
+
+//The HTML
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/5.7.0/d3.min.js"></script>
+
+<div id="chartId"></div>
+
+
+//playing with barchart
+barGroup.selectAll(".bar")
+            .data(selectedData)
+            .enter()
+            .append("rect")
+            .attr("class", "bar")
+            .attr("x", function(d) { return x(d.group); })
+            .attr("width", 10)
+            .attr("y", function(d) { return y(d.value); })
+            .attr("height", function(d) { return height - y(d.value); });
+  
+        var x = d3.scaleBand()
+            .range([ 0, width ])
+            .domain(selectedData.map(function(d) { return d.group; }))
+            .padding(0.2);
+
+            console.log('X', x)
+
+        barGroup.append("g")
+            .attr("transform", "translate(0," + height + ")")
+            .call(d3.axisBottom(x))
+
+
+        var y = d3.scaleLinear()
+            .domain([0, d3.max(selectedData, function(d) { return d.value;})])
+            .range([ height, 0]);
         
-        //pull only the data for the selected ID
-        var selectedData = EnvData.Country.filter(d => d.Country === myCountry);
-
-        console.log(selectedData)
-
-        .on("mouseover", function(d, i) {
-            console.log(d)
-            tooltip.style("display", "block");
-            tooltip.html(`<strong>${d.properties.ADMIN}</strong> <br> BioCapacity : ${d.properties.BioCap_RD}`)
-                .style("left", d3.mouse(this)[0] + "px")
-                .style("top", d3.mouse(this)[1] + "px");
-        })
-            // Step 3: Add an onmouseout event to make the tooltip invisible
-        .on("mouseout", function() {
-            tooltip.style("display", "none");
-        });
+        barGroup.append("g")
+            .attr("class", "myYaxis")
+            .call(d3.axisLeft(y));
