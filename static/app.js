@@ -41,23 +41,16 @@ var bar_svg = d3.select("#bar-div")
     .classed("svg-content-responsive", true)
     .attr("id","update-svg")
 
-
-// Create an SVG wrapper, append an SVG group that will hold our chart,
-// and shift the latter by left and top margins.
-var scatter_svg = d3
-    .select("#scatter-div")
-    .append("svg")
-    .attr("viewBox", "0 0 900 700")//set the viewbox to svg original height and width
-    .classed("svg-content-responsive", true)
-    .attr("id","scatter-svg")
-    .style("font", "20px times")
+bar_svg.append("text")
+    .classed("bar-starter", true)
+    .attr("x", 100)
+    .attr("y", height/2)
+    .text("Select a country from the map above to see data")
     
 
-// Append an SVG group
-var chartGroup = scatter_svg.append("g")
-    .attr("transform", `translate(${margin.left}, ${margin.top})`);
 
 
+//This function will go inside click event in map
 function createBar(x){
 
     d3.json("http://localhost:5000/api/v1.0/EnvData").then((data) => {
@@ -81,7 +74,7 @@ function createBar(x){
         console.log("myList", selectedData)
 
         
-        function updateBar(selectedData) {
+        function updateBar(CD, selectedData) {
 
             bar_svg.selectAll("*").remove();
 
@@ -126,17 +119,59 @@ function createBar(x){
                 .attr("width", xBandScale.bandwidth())
                 .attr("height", d => height - yLinearScale(d.value))
                 .attr("fill", function(d) { return barColor(d.group) })
+            
+            //Set title
+            barGroup.append("text")
+                .data(CD)
+                .attr("x", (width / 2))             
+                .attr("y", 40 - (margin.top/2))
+                .attr("text-anchor", "middle")  
+                .style("font-size", "25px") 
+                .style("font-weight", 800)
+                .style("text-decoration", "underline")  
+                .text(function(d){
+                    return d.Country
+                });
+            
+                var ylabel = barGroup.append("g")
+                    .attr("transform", `translate(-80,${height/2})`);
+        
+        
+                ylabel.append("text")
+                    .attr("transform", "rotate(-90)")
+                    .attr("y", 20)
+                    .attr("x", -120)
+                    .text("Ecological Footprint (Global Hectares per person)");
 
         }//end updateBar function
 
-        updateBar(selectedData)
+        updateBar(CD, selectedData)
         
     })//end d3 call
     
 }//end function createBar
 
+///////////////////SCATTER//////////////////////
 
-//Build main functions
+//SET UP SVG
+
+// Create an SVG wrapper, append an SVG group that will hold our chart,
+// and shift the latter by left and top margins.
+var scatter_svg = d3
+    .select("#scatter-div")
+    .append("svg")
+    .attr("viewBox", "0 0 900 700")//set the viewbox to svg original height and width
+    .classed("svg-content-responsive", true)
+    .attr("id","scatter-svg")
+    .style("font", "20px times")
+    
+
+// Append an SVG group
+var chartGroup = scatter_svg.append("g")
+    .attr("transform", `translate(${margin.left}, ${margin.top})`);
+
+//BUILD MAIN FUNCTIONS TO USE IN SCATTER PLOT UPDATE FUNCTION
+
 // function used for updating x-scale var upon click on axis label
 function xScale(EnvData, chosenXAxis) {
     // create scales
@@ -202,7 +237,6 @@ function renderCircleLabels(circlesLable, xLinearScale, yLinearScale, chosenXAxi
     return circlesLable;
 }//end function renderCircleLabels
   
-  
 // function used for updating circles group with new tooltip
 function updateToolTip(chosenXAxis, chosenYAxis, circlesGroup) {
       
@@ -232,7 +266,7 @@ var chosenYAxis = "Footprint_Total";
 var chosenXAxis = "HDI";
 
 
-////////////// Create Function for Everything with Data/////////
+//CREATE FUNCTION TO BRING SCATTER TOGETHER
 
 function getData() {
     //wait for the promise 
@@ -333,6 +367,15 @@ function getData() {
             .classed("active", true)
             .classed("inactive", false)
             .text("Total Ecological Footprint");
+        
+        chartGroup.append("text")
+            .attr("x", (width / 2))             
+            .attr("y", 40 - (margin.top/2))
+            .attr("text-anchor", "middle")  
+            .style("font-size", "25px") 
+            .style("font-weight", 800)
+            .style("text-decoration", "underline")  
+            .text("World Ecological Data")
     
     
         // updateToolTip 
@@ -408,7 +451,7 @@ function getData() {
     });//end of d3.json for main data
 }// end of getData function
 
-//////////// MAKE MAP //////////////
+/////////////////////// MAKE MAP ///////////////////////////
 
 //old color function (didn't use)
 function getColor(data){
@@ -470,32 +513,14 @@ var map_svg = d3.select("#map-div")
     .classed("map-svg", true);
 
 //make the tooltip for the map
-var Tooltip = d3.select("#map-div")
-    .append("div")
-    .attr("class", "tooltip")
-    .style("opacity", 1)
-    .style("background-color", "white")
-    .style("border", "solid")
-    .style("border-width", "2px")
-    .style("border-radius", "5px")
-    .style("padding", "5px")
-
-    // Two function that change the tooltip when user hover / move / leave a cell
-    var mouseover = function(d) {
-        Tooltip
-            .style("opacity", 1)
-            .html(function(){
-                console.log(d)
-                if (d.properties.BioCap_RD !== 0){return d.properties.ADMIN + "<br>" + "BioCap: " + d.properties.BioCap_RD}
-                else {return d.properties.ADMIN + ": No Data"}
-            })
-            .style("left", d3.event.pageX + "px")
-            .style("top", d3.event.pageY + "px")
-    }
-
-    var mouseleave = function(d) {
-        Tooltip.style("opacity", 0)
-    }
+var Tooltip = d3.tip()
+    .attr("class", "Tooltip")
+    .html(function(d){
+        console.log(d)
+        if (d.properties.BioCap_RD !== 0){return d.properties.ADMIN + "<br>" + "BioCap: " + d.properties.BioCap_RD}
+        else {return d.properties.ADMIN + ": No Data"}
+    })
+    
 
 
 //Load Map Data
@@ -522,8 +547,13 @@ d3.json("static/Data/EnvCountry.json").then((json) => {
             }
 
         })
-        .on("mouseover", mouseover)
-        .on("mouseleave", mouseleave)
+        .call(Tooltip)
+        .on("mouseover", function(d){
+            Tooltip.show(d);
+        })
+        .on("mouseleave", function(d){
+        Tooltip.hide(d);
+        })
         
 
     MyPaths.on("click", function(d) {
@@ -533,11 +563,20 @@ d3.json("static/Data/EnvCountry.json").then((json) => {
 
     })//end mouseclick 
 
+    //Make Map Title
+    map_svg.append("text")
+        .attr("x", 50)             
+        .attr("y", 3)
+        .attr("text-anchor", "middle")  
+        .style("font-size", "2.5px") 
+        .style("font-weight", 800)
+        .text("BioCapacity by Country")
+    
     /// MAKE LEGEND for MAP///
 
-    legend = map_svg.append("g")
+    var legend = map_svg.append("g")
         .attr("class", "legend")
-        .style("font", "2px times")
+        .style("font", "1.3px times")
         .attr("transform", "translate(5,-10)")
 
     var legend_width = 12
@@ -582,8 +621,10 @@ d3.json("static/Data/EnvCountry.json").then((json) => {
             .attr("fill", function(d, i) { return DefColorScaleLegend(i)});
     
     legend.append("text").text("0").attr("transform","translate("+((legend_width/2)-.5)+",15)");
-    legend.append("text").text("-10").attr("transform","translate(-2,15)");
-    legend.append("text").text("10").attr("transform","translate("+(legend_width)+",15)");
+    legend.append("text").text("-10").attr("transform","translate(-2,13)");
+    legend.append("text").text("Deficit").attr("transform","translate(-2,15)");
+    legend.append("text").text("10").attr("transform","translate("+(legend_width)+",13)");
+    legend.append("text").text("Reserve").attr("transform","translate("+(legend_width-2)+",15)");
 
 
 

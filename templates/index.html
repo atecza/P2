@@ -10,10 +10,56 @@
 </head>
 
 <body>
+  <div id = "intro-container" class="container-fluid main_background pt-5">
+    <div id = "header-row" class="row pt-5">
+      <div id = "header-div" class="justify-center header-div col mt-5 mb-2 pl-5">
+        <p style="font-size: 4vw;">Countries and their Ecological Footprint</h1>
+      </div>
+    </div>
+    <div id = "subheader-row" class="row pt-5">
+      <div id = "subheader-div" class="justify-center subheader-div col mt-5 mb-2 pl-5">
+        <p style="font-size: 2.5vw;">Project Overview</h1>
+      </div>
+      <div id = "subheader-div" class="justify-center subheader-div col mt-5 mb-2 pl-5">
+        <p style="font-size: 2.5vw;">About the Data</h1>
+      </div>
+    </div>
+    <div id = "text-row" class="row">
+      <div id = "text-div" class="text-div col pt-1 pb-5 pl-5">
+        <p style="font-size: 1.5vw;" class = "mytext">This project was undertaken as part
+        of the University of Denver's Data Science Bootcamp. Visualizations were generated using
+        two datasets: Ecological data was obtained from the Global Footprint Network in conjuntion with 
+        Mathis Wachernagel and William Reese at the University of British Columbia, economic data was provided by
+        the World Bank.</p>
+      </div>
+      <div id = "text-div" class="text-div col pt-1 pb-5 pr-5">
+        <p style="font-size: 1.5vw;" class = "mytext">An "Ecological Footprint" measures the ecological assets
+          a given population requires to produce the natural resources it consumes and to absorb its waste (e.g. CO2).
+          A nations biocapacity represents the productivity of its ecological assets. If left unharvested, these areas container
+          can help absorb waste such as CO2. Both the ecological footprint and biocapacity are expressed in global hectares.
+          A global hectare is a hectare standardized with world average productivity. If a populations ecological footprint exceeds
+          a region's biocapacity, that region runs an ecological deficit.</p>
+      </div>
+    </div>
+  </div>
   <div id = "map-container" class="container-fluid main_background">
     <div id = "map-row" class="row py-2">
-      <div id = "map-div" class="justify-center map-container col px-5 py-5">
+      <div id = "map-div" class="justify-center map-container col-8 px-5 py-5">
         <!-- map here-->
+      </div>
+      <div id = "mapinfo-div" class = "col mapinfo-div">
+        <div class="row mapheader-row">
+          <div class="text-div col pt-5 pl-2 pr-5">
+            <p style="font-size: 2vw;" class = "mytext">Coding Info</p>
+          </div>
+        </div>
+        <div class="row maptext-row">
+          <div id = "maptext-div" class="text-div col pt-2 pl-2 pr-5">
+            <p style="font-size: 1.3vw;" class = "mytext">This map represents a novel mechanism for users
+            to navigate through information. 
+            </p3>
+          </div>
+        </div>
       </div>
     </div>
   </div>

@@ -61,6 +61,49 @@ path:hover {
     background-attachment: fixed;
 }
 
+#intro-container{
+    text-align: center;
+    width: 100%;
+    background-image: url("https://images.unsplash.com/photo-1488330890490-c291ecf62571?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=700&q=60");
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+}
+
+.text-div{
+    color: whitesmoke;
+    text-align: justify;
+    text-justify: inter-word;
+
+}
+
+.maptext-div{
+    color: whitesmoke;
+    text-align: justify;
+    text-justify: inter-word;
+
+}
+
+.mytext{
+    line-height: 1.6;
+    font: "Courier New", Courier, monospace
+}
+
+.bar-starter{
+    font-size: 5vh;
+    color: black;
+    font: "Courier New", Courier, monospace
+}
+
+.header-div{
+    color: whitesmoke;
+}
+
+.subheader-div{
+    color:beige;
+}
+
+
 .scatter-row{
     width: 100%;
     text-align: center;
@@ -99,6 +142,16 @@ path:hover {
 .toolTip {
     background-color: gray;
     border: solid;
+    border-width: 2px;
+    border-radius: 5px;
+    padding: 5px;
+
+}
+
+/* stype Tooltip for map */
+.Tooltip {
+    background-color: whitesmoke;
+    border: black solid;
     border-width: 2px;
     border-radius: 5px;
     padding: 5px;
