@@ -4,6 +4,11 @@
     background-color: black;
 }
 
+.footer-text{
+    color: antiquewhite;
+
+}
+
 /* On mouse hover, lighten country color */
 path:hover {
 	fill-opacity: .7;
@@ -90,7 +95,7 @@ path:hover {
 }
 
 .bar-starter{
-    font-size: 5vh;
+    font-size: 35px;
     color: black;
     font: "Courier New", Courier, monospace
 }

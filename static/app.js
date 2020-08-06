@@ -188,7 +188,7 @@ function yScale(EnvData, chosenYAxis) {
     // create scales
     var yLinearScale = d3.scaleLinear()
         .domain([d3.max(EnvData, d => d[chosenYAxis]), d3.min(EnvData, d => d[chosenYAxis])])
-        .range([0, height]);
+        .range([0, (height)]);
     
     return yLinearScale;
     
@@ -344,7 +344,7 @@ function getData() {
             .attr("value", "EconAg") // value to grab for event listener
             .classed("active", false)
             .classed("inactive", true)
-            .text("Economy Agriculture");
+            .text("Economy Agriculture (%)");
 
         var EconIndLabel = xlabelsGroup.append("text")
             .attr("x", 0)
@@ -352,7 +352,7 @@ function getData() {
             .attr("value", "EconInd") // value to grab for event listener
             .classed("active", false)
             .classed("inactive", true)
-            .text("Economy Industry");
+            .text("Economy Industry (%)");
     
         // Create group for three y-axis labels
         var ylabelsGroup = chartGroup.append("g")
@@ -482,11 +482,11 @@ var DefColorMin = "#ffcc00",
 
 var DefColor = d3.scaleLinear()
     .range([DefColorMin, DefColorMax])
-    .domain([-0.001,-7])
+    .domain([-0.001,-10])
     .interpolate(d3.interpolateLab);
 var ResColor = d3.scaleLinear()
     .range([ResColorMin, ResColorMax])
-    .domain([0.001,15])
+    .domain([0.001,16])
     .interpolate(d3.interpolateLab);
 
 
