@@ -35,6 +35,7 @@ Base.prepare(engine, reflect=True)
 # Save reference to the table
 EnvironmentData = Base.classes.envdata
 CountryData = Base.classes.countrydata
+EmissionsData = Base.classes.emissionsdata
 
 #################################################
 # Flask Setup
@@ -101,6 +102,31 @@ def EnvData():
         
         myData[i].update(fullCData)
         i = i+1
+    
+    #get the emissions data in the correct json format
+    EmData = session.query(EmissionsData).all()
+    
+    countrylist = []
+    yearlist=[]
+    emlist=[]
+
+    for x in EmData:
+        countrylist.append(x.Country)
+        yearlist.append(x.Year)
+        emlist.append(x.Emissions)
+    
+    for x in range(len(myData)):
+        newyear=[]
+        newem=[]
+        for i in range(len(countrylist)):
+            if countrylist[i]==myData[x]['Country']:
+                newyear.append(yearlist[i])
+                newem.append(emlist[i])
+        myData[x].update({
+            "Year":newyear,
+            "Emissions":newem
+        })
+    
     
     """Return the JSON representation of your dictionary"""
     return (jsonify(myData))

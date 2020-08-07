@@ -1,4 +1,59 @@
 
+////////////// FUNCTIONS FOR CHART From CHARTS.JS /////////////
+
+
+
+function BuildChart(labels, values, country){
+    
+    //call element
+    var ctx = document.getElementById("myChart").getContext('2d');
+    
+    var myChart = new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels:labels,
+            datasets:[
+                {
+                    label: "Emissions CO2 by Year",
+                    data: values,
+                    borderColor:["rgba(48, 166, 181, 1)"],
+                    backgroundColor:["rgba(35, 122, 133, 0.42)"]
+
+                }
+            ]
+        },
+        options: {
+            responsive: true, // Instruct chart JS to respond nicely.
+            maintainAspectRatio: false, // Add to prevent default behavior of full-width/height
+            title: {
+                display:true,
+                text:`${country}`,
+                fontSize: 20,
+            },
+            scales: {
+                yAxes: [{
+                    scaleLabel: {
+                        display: true,
+                        labelString: 'Emissions (metric tons per capita)'
+                    }
+                }],
+                xAxes: [{
+                    scaleLabel: {
+                        display: true,
+                        labelString: 'Year'
+
+                    }
+                }]
+            }     
+        } 
+    });//end of newchart creation
+
+    return myChart;
+
+}//end buildchart function
+
+
+////////////// FUNCTIONS FOR BAR CHART
 //make color for bar chart
 function barColor(group) {
     switch (group) {
@@ -49,20 +104,19 @@ bar_svg.append("text")
     
 
 
-
 //This function will go inside click event in map
-function createBar(x){
+function clickGraphs(x){
 
     d3.json("http://localhost:5000/api/v1.0/EnvData").then((data) => {
 
         //filter data for bar graph by selected country
-        CD = data.filter(f => f.Country === x)
-        console.log(`Test data`, CD)
+        filterData = data.filter(f => f.Country === x)
+        console.log(`Test data`, filterData)
 
         //get the data into appropriate format for bar graph
         selectedData = []
 
-        Object.entries(CD[0]).forEach(([key, value]) => {
+        Object.entries(filterData[0]).forEach(([key, value]) => {
             if (key.includes("Footprint")){
                 console.log(key)
                 console.log(value)
@@ -74,7 +128,7 @@ function createBar(x){
         console.log("myList", selectedData)
 
         
-        function updateBar(CD, selectedData) {
+        function updateBar(filterData, selectedData) {
 
             bar_svg.selectAll("*").remove();
 
@@ -122,7 +176,7 @@ function createBar(x){
             
             //Set title
             barGroup.append("text")
-                .data(CD)
+                .data(filterData)
                 .attr("x", (width / 2))             
                 .attr("y", 40 - (margin.top/2))
                 .attr("text-anchor", "middle")  
@@ -145,7 +199,15 @@ function createBar(x){
 
         }//end updateBar function
 
-        updateBar(CD, selectedData)
+        updateBar(filterData, selectedData)
+
+        //add the charts.js function
+        var labels = filterData[0].Year
+        var values = filterData[0].Emissions
+
+        var countryx = x
+        BuildChart(labels, values, countryx)
+        
         
     })//end d3 call
     
@@ -526,6 +588,8 @@ var Tooltip = d3.tip()
 //Load Map Data
 d3.json("static/Data/EnvCountry.json").then((json) => {
 
+    //populate graphs with one country's data
+    clickGraphs('Canada')
 
     console.log(json)
     // Bind the data to the SVG and create one path per GeoJSON feature
@@ -559,7 +623,7 @@ d3.json("static/Data/EnvCountry.json").then((json) => {
     MyPaths.on("click", function(d) {
         ChosenCountry  = d.properties.ADMIN
         console.log(`ChosenCountry: ${ChosenCountry}`)
-        return createBar(ChosenCountry)//this function makes bar graph
+        return clickGraphs(ChosenCountry)//this function makes bar graph
 
     })//end mouseclick 
 

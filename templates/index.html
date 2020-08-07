@@ -44,7 +44,7 @@
   </div>
   <div id = "map-container" class="container-fluid main_background">
     <div id = "map-row" class="row mx-4 py-2">
-      <div id = "map-div" class="justify-center map-container col-8 px-5 py-5">
+      <div id = "map-div" class="justify-center map-container col-sm-12 px-5 py-5">
         <!-- map here-->
       </div>
       <div id = "mapinfo-div" class = "col mapinfo-div">
@@ -55,7 +55,7 @@
         </div>
         <div class="row maptext-row">
           <div id = "maptext-div" class="text-div col pt-1 pl-2 mr-3 pr-5">
-            <p style="font-size: 1.3vw;" class = "mytext">This project focused on three aspects of working in 
+            <p style="font-size: 1.2vw;" class = "mytext">This project focused on three aspects of working in 
             the d3 library: multiple data sources, updating, and responsiveness. The map interface was created by
             nesting ecological data inside the geojson callback function. This allowed subsequent graphs to be 
             generated when a path (country) within the map was clicked. Updating in this project was achieved in two ways.
@@ -73,10 +73,17 @@
       <div id="scatter-div" class="justify-center scatter-div col my-5 pl-5">
           <!-- scatter here -->
       </div>
-      <div id="bar-div" class="justify-right bar-div col my-5 pr-5">
+      <div id="bar-div" class="justify-center bar-div col my-5 pr-5">
           <!-- bar here -->
       </div>
     </div>
+  </div>
+  <div id= "chart-container" class="d-flex flex-column main_background">
+    <div class="d-flex row flex-row chart-row justify-content-center">
+      <div id="chart1-div" class="d-flex justify-content-center chart col-10 my-5 mr-5 ml-5 pr-2 pl-2">
+          <!-- ChartJS here -->
+          <canvas id="myChart" width="550" height="350" ></canvas>
+      </div>
     </div>
   </div>
 
@@ -92,6 +99,7 @@
   <script src="https://d3js.org/d3-geo-projection.v2.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/d3-tip/0.7.1/d3-tip.min.js"></script>
   <script src="http://d3js.org/topojson.v1.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js"></script>
   <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
   <script type="text/javascript" src="static/app.js"></script>
 

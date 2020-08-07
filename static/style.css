@@ -94,6 +94,11 @@ path:hover {
     font: "Courier New", Courier, monospace
 }
 
+
+#chart1-div{
+    background-color: whitesmoke;
+}
+
 .bar-starter{
     font-size: 35px;
     color: black;

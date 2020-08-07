@@ -50,10 +50,19 @@ CREATE TABLE "CountryData" (
     "Energy_Prod" INT   NOT NULL
 );
 
+CREATE TABLE "emissionsdata" (
+    "Country" VARCHAR   NOT NULL,
+    "Year" INT   NOT NULL,
+    "Emissions" FLOAT   NOT NULL
+);
+
 ALTER TABLE "EnvData" ADD CONSTRAINT "fk_EnvData_Country" FOREIGN KEY("Country")
 REFERENCES "States" ("Country");
 
 ALTER TABLE "CountryData" ADD CONSTRAINT "fk_CountryData_Country" FOREIGN KEY("Country")
+REFERENCES "States" ("Country");
+
+ALTER TABLE "emissionsdata" ADD CONSTRAINT "fk_emissionsdata_Country" FOREIGN KEY("Country")
 REFERENCES "States" ("Country");
 
 ALTER TABLE "CountryData" 
@@ -70,7 +79,13 @@ RENAME TO countrydata;
 
 ALTER TABLE envdata ADD COLUMN ID SERIAL PRIMARY KEY;
 ALTER TABLE countrydata ADD COLUMN ID SERIAL PRIMARY KEY;
+ALTER TABLE emissionsdata ADD COLUMN ID SERIAL PRIMARY KEY;
 
 SELECT * from envdata;
 SELECT * from countrydata;
 SELECT * from states;
+SELECT * from emissionsdata;
+
+DELETE FROM envdata;
+DELETE FROM countrydata;
+DELETE FROM emissionsdata;
