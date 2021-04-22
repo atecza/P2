@@ -27,7 +27,7 @@ import datetime as dt
 #database = 'Project2'
 #database = 'd5l7n5pdmr2nb8'
 #url = f"postgresql://{pg_user}:{pg_pwd}@localhost:{pg_port}/{database}"
-url = os.getenv('url_heroku')
+url = os.getenv('DATABASE_URL')
 engine = create_engine(f'{url}')
 
 # reflect an existing database into a new model
