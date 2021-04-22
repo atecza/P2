@@ -5,6 +5,7 @@ from sqlalchemy.ext.automap import automap_base
 from sqlalchemy.orm import Session
 from sqlalchemy import create_engine, func
 import psycopg2
+import os
 
 from flask import Flask, jsonify, render_template, redirect
 import datetime as dt
@@ -26,7 +27,7 @@ import datetime as dt
 #database = 'Project2'
 #database = 'd5l7n5pdmr2nb8'
 #url = f"postgresql://{pg_user}:{pg_pwd}@localhost:{pg_port}/{database}"
-url = url_heroku
+url = os.getenv('url_heroku')
 
 engine = create_engine(f'{url}')
 
