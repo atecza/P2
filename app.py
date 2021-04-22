@@ -10,20 +10,23 @@ from flask import Flask, jsonify, render_template, redirect
 import datetime as dt
 
 #make sure you have your own config on your computer in the SQL folder
-from config import key
+from config import config_dict
 
 #################################################
 # Database Setup
 #################################################
-pg_user = 'postgres'
-pg_pwd = key
-pg_port = "5432"
+#pg_user = pg_user
+#pg_pwd = pg_pwd
+#pg_port = pg_port
+#database = database
 
 #remember to make this db in pgAdmin before
 # run Final_Query.sql in pgAdmin to create the tables
 
-database = 'Project2'
-url = f"postgresql://{pg_user}:{pg_pwd}@localhost:{pg_port}/{database}"
+#database = 'Project2'
+#database = 'd5l7n5pdmr2nb8'
+#url = f"postgresql://{pg_user}:{pg_pwd}@localhost:{pg_port}/{database}"
+url = url_heroku
 
 engine = create_engine(f'{url}')
 
