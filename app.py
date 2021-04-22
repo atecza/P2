@@ -10,7 +10,7 @@ from flask import Flask, jsonify, render_template, redirect
 import datetime as dt
 
 #make sure you have your own config on your computer in the SQL folder
-from config import config_dict
+#from config import config_dict
 
 #################################################
 # Database Setup
