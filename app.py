@@ -6,6 +6,7 @@ from sqlalchemy.orm import Session
 from sqlalchemy import create_engine, func
 import psycopg2
 import os
+from dotenv import load_dotenv
 
 from flask import Flask, jsonify, render_template, redirect
 import datetime as dt
@@ -13,21 +14,25 @@ import datetime as dt
 #make sure you have your own config on your computer in the SQL folder
 #from config import config_dict
 
+# load dotenv in the base root
+APP_ROOT = os.path.join(os.path.dirname(__file__))   # refers to application_top
+dotenv_path = os.path.join(APP_ROOT, '.env')
+load_dotenv(dotenv_path)
+
 #################################################
 # Database Setup
 #################################################
-#pg_user = pg_user
-#pg_pwd = pg_pwd
-#pg_port = pg_port
-#database = database
 
 #remember to make this db in pgAdmin before
-# run Final_Query.sql in pgAdmin to create the tables
+#run Final_Query.sql in pgAdmin to create the tables
 
-#database = 'Project2'
-#database = 'd5l7n5pdmr2nb8'
-#url = f"postgresql://{pg_user}:{pg_pwd}@localhost:{pg_port}/{database}"
+#### Run in dev env
+#url = os.environ.get('URL')
+
+
+#### Run in Heroku
 url = os.getenv('DATABASE_URL')
+
 engine = create_engine(f'{url}')
 
 # reflect an existing database into a new model
