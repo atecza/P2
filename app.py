@@ -31,7 +31,7 @@ load_dotenv(dotenv_path)
 
 
 #### Run in Heroku
-url = os.getenv('DATABASE_URL')
+url = os.getenv('URL')
 
 engine = create_engine(f'{url}')
 
