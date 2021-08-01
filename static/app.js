@@ -107,7 +107,7 @@ bar_svg.append("text")
 //This function will go inside click event in map
 function clickGraphs(x){
 
-    d3.json("http://localhost:5000/api/v1.0/EnvData").then((data) => {
+    d3.json("/api/v1.0/EnvData").then((data) => {
 
         //filter data for bar graph by selected country
         filterData = data.filter(f => f.Country === x)
