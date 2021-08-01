@@ -55,11 +55,11 @@ app = Flask(__name__)
 #################################################
 
 @app.route("/")
-def Index():
+def index():
     return render_template("index.html")
 
 @app.route("/api/v1.0/EnvData")
-def EnvData():
+def envData():
     # Create our session (link) from Python to the DB
     session = Session(engine)
     
