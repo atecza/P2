@@ -58,7 +58,7 @@ app = Flask(__name__)
 def index():
     return render_template("index.html")
 
-@app.route("/api/v1.0/EnvData")
+@app.route("https://at-analytics.herokuapp.com/api/v1.0/EnvData")
 def envData():
     # Create our session (link) from Python to the DB
     session = Session(engine)
