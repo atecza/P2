@@ -332,7 +332,7 @@ var chosenXAxis = "HDI";
 
 function getData() {
     //wait for the promise 
-    d3.json("https://at-analytics.herokuapp.com/api/v1.0/EnvData").then((data) => {
+    d3.json("/api/v1.0/EnvData").then((data) => {
         console.log(`x & y: ${chosenXAxis},${chosenYAxis}`)
         
         var EnvData = data.filter(d => d.BioCap_RD !== 0)
