@@ -586,7 +586,7 @@ var Tooltip = d3.tip()
 
 
 //Load Map Data
-d3.json("static/Data/EnvCountry.json").then((json) => {
+d3.json("https://at-resume.s3.us-east-2.amazonaws.com/EnvCountry.json").then((json) => {
 
     //populate graphs with one country's data
     clickGraphs('Canada')
