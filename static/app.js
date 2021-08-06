@@ -336,10 +336,12 @@ function getData() {
         console.log(`x & y: ${chosenXAxis},${chosenYAxis}`)
         
         var EnvData = data.filter(d => d.BioCap_RD !== 0)
+        console.log('test')
         console.log(EnvData)
 
         // xLinearScale function above csv import
         var xLinearScale = xScale(EnvData, chosenXAxis);
+        
   
         // Create y scale function
         var yLinearScale = yScale(EnvData, chosenYAxis);
@@ -586,7 +588,8 @@ var Tooltip = d3.tip()
 
 
 //Load Map Data
-d3.json("https://at-resume.s3.us-east-2.amazonaws.com/EnvCountry.json").then((json) => {
+d3.json("static/Data/EnvCountry.json").then((json) => {
+//d3.json("https://at-resume.s3.us-east-2.amazonaws.com/EnvCountry.json").then((json) => {
 
     //populate graphs with one country's data
     clickGraphs('Canada')
